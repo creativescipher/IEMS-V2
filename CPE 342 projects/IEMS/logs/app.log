@@ -149,3 +149,13 @@ sqlite3.OperationalError: no such table: schema_version
 2026-07-19 17:20:53,955 | INFO | database.seeders.categories | Default categories seeded.
 2026-07-19 17:20:53,975 | INFO | database.seeders.settings | System settings seeded.
 2026-07-19 17:21:01,462 | INFO | services.auth_service | admin logged in.
+2026-07-19 17:25:22,200 | INFO | database.schema | Database schema initialized successfully.
+2026-07-19 17:25:22,202 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-19 17:25:22,211 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-19 17:25:22,241 | INFO | database.seeders.settings | System settings seeded.
+2026-07-19 17:25:34,069 | INFO | services.auth_service | admin logged in.
+2026-07-19 17:26:30,632 | INFO | database.schema | Database schema initialized successfully.
+2026-07-19 17:26:30,634 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-19 17:26:30,644 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-19 17:26:30,654 | INFO | database.seeders.settings | System settings seeded.
+2026-07-19 17:26:41,708 | INFO | services.auth_service | admin logged in.

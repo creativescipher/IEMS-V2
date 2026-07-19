@@ -17,7 +17,7 @@ class ExpenditureDialog(ctk.CTkToplevel):
         self.refresh_callback = refresh_callback
 
         self.title("Add Expenditure")
-        self.geometry("420x460")
+        self.geometry("420x520")
         self.resizable(False, False)
         self.configure(fg_color=theme.BACKGROUND)
 
@@ -117,7 +117,7 @@ class ExpenditureDialog(ctk.CTkToplevel):
             fg_color="transparent"
         )
 
-        buttons.pack(pady=25)
+        buttons.pack(pady=(20, 25))
 
         ctk.CTkButton(
             buttons,

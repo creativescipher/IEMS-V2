@@ -14,7 +14,7 @@ class UserDialog(ctk.CTkToplevel):
         self.refresh_callback = refresh_callback
 
         self.title("Add User")
-        self.geometry("400x460")
+        self.geometry("400x520")
         self.resizable(False, False)
         self.configure(fg_color=theme.BACKGROUND)
 
@@ -113,7 +113,7 @@ class UserDialog(ctk.CTkToplevel):
             fg_color="transparent"
         )
 
-        buttons.pack(pady=25)
+        buttons.pack(pady=(20, 25))
 
         ctk.CTkButton(
             buttons,
