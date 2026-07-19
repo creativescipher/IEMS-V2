@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 from datetime import datetime
 
+from config import theme
 from database.connection import get_connection
 from services.expenditure_service import ExpenditureService
 from services.session import Session
@@ -16,72 +17,90 @@ class ExpenditureDialog(ctk.CTkToplevel):
         self.refresh_callback = refresh_callback
 
         self.title("Add Expenditure")
-        self.geometry("420x420")
+        self.geometry("420x460")
         self.resizable(False, False)
+        self.configure(fg_color=theme.BACKGROUND)
 
         self.grab_set()
 
         ctk.CTkLabel(
             self,
             text="Add Expenditure",
-            font=("Segoe UI", 22, "bold")
-        ).pack(pady=(20, 20))
+            font=theme.SUBTITLE_FONT,
+            text_color=theme.TEXT
+        ).pack(pady=(25, 20))
 
         # ---------------- Category ----------------
 
         ctk.CTkLabel(
             self,
-            text="Category"
+            text="Category",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
         self.category = ctk.CTkComboBox(
             self,
             width=300,
+            height=38,
+            corner_radius=10,
             values=self.load_categories()
         )
 
-        self.category.pack(pady=8)
+        self.category.pack(pady=(4, 12))
 
         # ---------------- Amount ----------------
 
         ctk.CTkLabel(
             self,
-            text="Amount"
+            text="Amount",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
         self.amount = ctk.CTkEntry(
             self,
             width=300,
+            height=38,
+            corner_radius=10,
             placeholder_text="0.00"
         )
 
-        self.amount.pack(pady=8)
+        self.amount.pack(pady=(4, 12))
 
         # ---------------- Description ----------------
 
         ctk.CTkLabel(
             self,
-            text="Description"
+            text="Description",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
         self.description = ctk.CTkEntry(
             self,
             width=300,
+            height=38,
+            corner_radius=10,
             placeholder_text="Description"
         )
 
-        self.description.pack(pady=8)
+        self.description.pack(pady=(4, 12))
 
         # ---------------- Date ----------------
 
         ctk.CTkLabel(
             self,
-            text="Transaction Date"
+            text="Transaction Date",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
         self.date = ctk.CTkEntry(
             self,
-            width=300
+            width=300,
+            height=38,
+            corner_radius=10
         )
 
         self.date.insert(
@@ -89,7 +108,7 @@ class ExpenditureDialog(ctk.CTkToplevel):
             datetime.today().strftime("%Y-%m-%d")
         )
 
-        self.date.pack(pady=8)
+        self.date.pack(pady=(4, 12))
 
         # ---------------- Buttons ----------------
 
@@ -103,15 +122,27 @@ class ExpenditureDialog(ctk.CTkToplevel):
         ctk.CTkButton(
             buttons,
             text="Save",
-            width=120,
+            width=130,
+            height=40,
+            corner_radius=10,
+            fg_color=theme.PRIMARY,
+            hover_color=theme.PRIMARY_HOVER,
+            font=theme.BODY_FONT,
             command=self.save
         ).pack(side="left", padx=8)
 
         ctk.CTkButton(
             buttons,
             text="Cancel",
-            width=120,
-            fg_color="gray",
+            width=130,
+            height=40,
+            corner_radius=10,
+            fg_color="transparent",
+            hover_color=theme.BORDER,
+            border_width=1,
+            border_color=theme.BORDER,
+            text_color=theme.TEXT,
+            font=theme.BODY_FONT,
             command=self.destroy
         ).pack(side="left", padx=8)
 

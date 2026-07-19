@@ -144,3 +144,8 @@ sqlite3.OperationalError: no such table: schema_version
 2026-07-19 17:16:41,190 | INFO | database.seeders.settings | System settings seeded.
 2026-07-19 17:16:48,407 | WARNING | services.auth_service | Invalid password.
 2026-07-19 17:16:53,026 | INFO | services.auth_service | admin logged in.
+2026-07-19 17:20:53,945 | INFO | database.schema | Database schema initialized successfully.
+2026-07-19 17:20:53,947 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-19 17:20:53,955 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-19 17:20:53,975 | INFO | database.seeders.settings | System settings seeded.
+2026-07-19 17:21:01,462 | INFO | services.auth_service | admin logged in.
