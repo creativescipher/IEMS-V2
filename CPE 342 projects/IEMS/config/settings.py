@@ -1,15 +1,27 @@
+import sys
 from pathlib import Path
 
 # ==========================================================
 # APPLICATION INFORMATION
 # ==========================================================
+
 APP_NAME = "Income & Expenditure Management System"
 APP_VERSION = "1.0.0"
 
 # ==========================================================
 # PROJECT PATHS
 # ==========================================================
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+if getattr(sys, "frozen", False):
+
+    # Running as a bundled exe — store data in AppData so it
+    # survives restarts and isn't wiped with the temp extraction.
+    BASE_DIR = Path.home() / "AppData" / "Local" / "IEMS"
+
+else:
+
+    # Running as a normal Python script during development.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATA_DIR = BASE_DIR / "data"
 LOGS_DIR = BASE_DIR / "logs"
@@ -21,12 +33,14 @@ LOG_FILE = LOGS_DIR / "app.log"
 # ==========================================================
 # CREATE REQUIRED DIRECTORIES
 # ==========================================================
+
 for directory in (DATA_DIR, LOGS_DIR, EXPORTS_DIR):
-    directory.mkdir(exist_ok=True)
+    directory.mkdir(parents=True, exist_ok=True)
 
 # ==========================================================
 # USER ROLES
 # ==========================================================
+
 ROLE_PERMISSIONS = {
     "Admin": [
         "manage_users",
@@ -49,7 +63,8 @@ ROLE_PERMISSIONS = {
 }
 
 # ==========================================================
-# UI SETTINGS (Used later in Milestone M3)
+# UI SETTINGS
 # ==========================================================
+
 THEME = "dark"
 COLOR_THEME = "blue"
