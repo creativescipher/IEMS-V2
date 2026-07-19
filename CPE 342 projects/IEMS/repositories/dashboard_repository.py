@@ -4,33 +4,37 @@ from database.connection import get_connection
 class DashboardRepository:
 
     @staticmethod
-    def total_income():
+    def get_summary():
+
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
-            SELECT IFNULL(SUM(amount), 0)
-            FROM income
-        """)
+        cursor.execute(
+            "SELECT COALESCE(SUM(amount), 0) AS total FROM income"
+        )
+        total_income = cursor.fetchone()["total"]
 
-        value = cursor.fetchone()[0]
+        cursor.execute(
+            "SELECT COALESCE(SUM(amount), 0) AS total FROM expenditure"
+        )
+        total_expenditure = cursor.fetchone()["total"]
 
-        conn.close()
+        cursor.execute(
+            "SELECT COUNT(*) AS total FROM income"
+        )
+        income_count = cursor.fetchone()["total"]
 
-        return value
-
-    @staticmethod
-    def total_expenditure():
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT IFNULL(SUM(amount), 0)
-            FROM expenditure
-        """)
-
-        value = cursor.fetchone()[0]
+        cursor.execute(
+            "SELECT COUNT(*) AS total FROM expenditure"
+        )
+        expenditure_count = cursor.fetchone()["total"]
 
         conn.close()
 
-        return value
+        return {
+            "income": total_income,
+            "expenditure": total_expenditure,
+            "balance": total_income - total_expenditure,
+            "income_count": income_count,
+            "expenditure_count": expenditure_count
+        }

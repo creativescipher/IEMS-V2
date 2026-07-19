@@ -106,3 +106,8 @@ sqlite3.OperationalError: no such table: schema_version
 2026-07-19 12:35:27,492 | INFO | services.auth_service | admin logged in.
 2026-07-19 12:39:34,510 | INFO | services.auth_service | admin logged in.
 2026-07-19 13:40:59,592 | INFO | services.auth_service | admin logged in.
+2026-07-19 14:34:37,340 | WARNING | services.auth_service | Invalid password.
+2026-07-19 14:34:44,136 | WARNING | services.auth_service | Invalid password.
+2026-07-19 14:35:33,996 | INFO | services.auth_service | admin logged in.
+2026-07-19 14:44:05,396 | INFO | services.auth_service | admin logged in.
+2026-07-19 14:46:22,876 | INFO | services.auth_service | admin logged in.

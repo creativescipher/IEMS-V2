@@ -1,10 +1,7 @@
 import customtkinter as ctk
 
 from config import theme
-
 from services.dashboard_service import DashboardService
-
-from views.widgets.stat_card import StatCard
 
 
 class DashboardPage(ctk.CTkFrame):
@@ -16,6 +13,13 @@ class DashboardPage(ctk.CTkFrame):
             fg_color=theme.BACKGROUND
         )
 
+        self.build_ui()
+        self.load_dashboard()
+
+    # ==================================================
+
+    def build_ui(self):
+
         ctk.CTkLabel(
             self,
             text="Dashboard",
@@ -23,7 +27,7 @@ class DashboardPage(ctk.CTkFrame):
         ).pack(
             anchor="w",
             padx=25,
-            pady=(20,25)
+            pady=(20, 20)
         )
 
         cards = ctk.CTkFrame(
@@ -32,39 +36,125 @@ class DashboardPage(ctk.CTkFrame):
         )
 
         cards.pack(
-            fill="x",
-            padx=20
+            padx=20,
+            pady=10,
+            fill="both",
+            expand=True
         )
 
-        income = DashboardService.total_income()
+        cards.grid_columnconfigure((0, 1), weight=1)
+        cards.grid_rowconfigure((0, 1), weight=1)
 
-        expenditure = DashboardService.total_expenditure()
-
-        balance = DashboardService.balance()
-
-        StatCard(
+        self.income_card = self.create_card(
             cards,
-            "Total Income",
-            f"₦{income:,.2f}"
-        ).pack(
-            side="left",
-            padx=10
+            "Total Income"
+        )
+        self.income_card.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=10,
+            sticky="nsew"
         )
 
-        StatCard(
+        self.expense_card = self.create_card(
             cards,
-            "Total Expenditure",
-            f"₦{expenditure:,.2f}"
-        ).pack(
-            side="left",
-            padx=10
+            "Total Expenditure"
+        )
+        self.expense_card.grid(
+            row=0,
+            column=1,
+            padx=10,
+            pady=10,
+            sticky="nsew"
         )
 
-        StatCard(
+        self.balance_card = self.create_card(
             cards,
-            "Current Balance",
-            f"₦{balance:,.2f}"
+            "Net Balance"
+        )
+        self.balance_card.grid(
+            row=1,
+            column=0,
+            padx=10,
+            pady=10,
+            sticky="nsew"
+        )
+
+        self.records_card = self.create_card(
+            cards,
+            "Records"
+        )
+        self.records_card.grid(
+            row=1,
+            column=1,
+            padx=10,
+            pady=10,
+            sticky="nsew"
+        )
+
+        ctk.CTkButton(
+            self,
+            text="Refresh Dashboard",
+            width=180,
+            command=self.load_dashboard
         ).pack(
-            side="left",
-            padx=10
+            pady=20
+        )
+
+    # ==================================================
+
+    def create_card(self, master, title):
+
+        card = ctk.CTkFrame(
+            master,
+            corner_radius=12,
+            height=140
+        )
+
+        card.pack_propagate(False)
+
+        ctk.CTkLabel(
+            card,
+            text=title,
+            font=("Segoe UI", 16, "bold")
+        ).pack(
+            pady=(20, 10)
+        )
+
+        value = ctk.CTkLabel(
+            card,
+            text="",
+            font=("Segoe UI", 22)
+        )
+
+        value.pack()
+
+        card.value = value
+
+        return card
+
+    # ==================================================
+
+    def load_dashboard(self):
+
+        data = DashboardService.get_summary()
+
+        self.income_card.value.configure(
+            text=f"₦{data['income']:,.2f}"
+        )
+
+        self.expense_card.value.configure(
+            text=f"₦{data['expenditure']:,.2f}"
+        )
+
+        self.balance_card.value.configure(
+            text=f"₦{data['balance']:,.2f}"
+        )
+
+        self.records_card.value.configure(
+            text=(
+                f"Income: {data['income_count']}\n"
+                f"Expense: {data['expenditure_count']}"
+            )
         )
