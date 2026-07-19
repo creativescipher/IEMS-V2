@@ -22,7 +22,8 @@ class SettingsPage(ctk.CTkFrame):
         ctk.CTkLabel(
             self,
             text="Settings",
-            font=theme.TITLE_FONT
+            font=theme.TITLE_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=25,
@@ -31,7 +32,10 @@ class SettingsPage(ctk.CTkFrame):
 
         card = ctk.CTkFrame(
             self,
-            corner_radius=12
+            fg_color=theme.CARD,
+            corner_radius=18,
+            border_width=1,
+            border_color=theme.BORDER
         )
 
         card.pack(
@@ -44,7 +48,9 @@ class SettingsPage(ctk.CTkFrame):
 
         ctk.CTkLabel(
             card,
-            text="Company Name"
+            text="Company Name",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=20,
@@ -53,15 +59,15 @@ class SettingsPage(ctk.CTkFrame):
 
         self.company = ctk.CTkEntry(
             card,
-            width=350
+            width=350,
+            height=38,
+            corner_radius=10
         )
 
-        self.company.insert(
-            0,
-            "Seven-Up Bottling Company"
-        )
+        self.company.insert(0, "Seven-Up Bottling Company")
 
         self.company.pack(
+            anchor="w",
             padx=20,
             pady=(0, 15)
         )
@@ -70,7 +76,9 @@ class SettingsPage(ctk.CTkFrame):
 
         ctk.CTkLabel(
             card,
-            text="Currency"
+            text="Currency",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=20,
@@ -85,12 +93,15 @@ class SettingsPage(ctk.CTkFrame):
                 "£ British Pound",
                 "€ Euro"
             ],
-            width=250
+            width=250,
+            height=38,
+            corner_radius=10
         )
 
         self.currency.set("₦ Nigerian Naira")
 
         self.currency.pack(
+            anchor="w",
             padx=20,
             pady=(0, 15)
         )
@@ -99,7 +110,9 @@ class SettingsPage(ctk.CTkFrame):
 
         ctk.CTkLabel(
             card,
-            text="Appearance"
+            text="Appearance",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=20,
@@ -108,16 +121,16 @@ class SettingsPage(ctk.CTkFrame):
 
         self.mode = ctk.CTkComboBox(
             card,
-            values=[
-                "Light",
-                "Dark"
-            ],
-            width=250
+            values=["Light", "Dark"],
+            width=250,
+            height=38,
+            corner_radius=10
         )
 
-        self.mode.set("Light")
+        self.mode.set(theme.current_mode())
 
         self.mode.pack(
+            anchor="w",
             padx=20,
             pady=(0, 25)
         )
@@ -128,14 +141,22 @@ class SettingsPage(ctk.CTkFrame):
             self,
             text="Save Settings",
             width=180,
+            height=40,
+            corner_radius=10,
+            fg_color=theme.PRIMARY,
+            hover_color=theme.PRIMARY_HOVER,
             command=self.save_settings
         ).pack(
+            anchor="w",
+            padx=25,
             pady=20
         )
 
     # ==================================================
 
     def save_settings(self):
+
+        theme.set_mode(self.mode.get())
 
         messagebox.showinfo(
             "Success",

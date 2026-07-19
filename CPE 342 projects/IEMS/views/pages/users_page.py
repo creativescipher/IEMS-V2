@@ -25,7 +25,8 @@ class UsersPage(ctk.CTkFrame):
         ctk.CTkLabel(
             self,
             text="User Management",
-            font=theme.TITLE_FONT
+            font=theme.TITLE_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=25,
@@ -47,10 +48,24 @@ class UsersPage(ctk.CTkFrame):
             toolbar,
             text="+ Add User",
             width=140,
+            height=38,
+            corner_radius=10,
+            fg_color=theme.PRIMARY,
+            hover_color=theme.PRIMARY_HOVER,
             command=self.add_user
         ).pack(side="left")
 
-        table = ctk.CTkFrame(self)
+        # ==================================================
+        # Table container
+        # ==================================================
+
+        table = ctk.CTkFrame(
+            self,
+            fg_color=theme.CARD,
+            corner_radius=18,
+            border_width=1,
+            border_color=theme.BORDER
+        )
 
         table.pack(
             fill="both",
@@ -59,37 +74,57 @@ class UsersPage(ctk.CTkFrame):
             pady=(5, 20)
         )
 
-        header = ctk.CTkFrame(table)
-
-        header.pack(fill="x")
-
         headers = [
-            "Username",
-            "Full Name",
-            "Role",
-            "Status",
-            "Action"
+            ("Username", 140),
+            ("Full Name", 180),
+            ("Role", 120),
+            ("Status", 110)
         ]
 
-        for text in headers:
+        header_frame = ctk.CTkFrame(
+            table,
+            fg_color="transparent"
+        )
+
+        header_frame.pack(
+            fill="x",
+            padx=15,
+            pady=(15, 5)
+        )
+
+        for text, width in headers:
 
             ctk.CTkLabel(
-                header,
+                header_frame,
                 text=text,
-                width=140,
+                width=width,
                 anchor="w",
-                font=("Segoe UI", 12, "bold")
+                font=theme.SMALL_FONT,
+                text_color=theme.TEXT_LIGHT
             ).pack(
                 side="left",
-                padx=5,
-                pady=10
+                padx=5
             )
 
-        self.body = ctk.CTkScrollableFrame(table)
+        ctk.CTkLabel(
+            header_frame,
+            text="Action",
+            width=90,
+            anchor="e",
+            font=theme.SMALL_FONT,
+            text_color=theme.TEXT_LIGHT
+        ).pack(side="right", padx=5)
+
+        self.body = ctk.CTkScrollableFrame(
+            table,
+            fg_color="transparent"
+        )
 
         self.body.pack(
             fill="both",
-            expand=True
+            expand=True,
+            padx=10,
+            pady=(0, 15)
         )
 
     # ==================================================
@@ -105,14 +140,22 @@ class UsersPage(ctk.CTkFrame):
 
             ctk.CTkLabel(
                 self.body,
-                text="No users found."
+                text="No users found.",
+                text_color=theme.TEXT_LIGHT
             ).pack(pady=30)
 
             return
 
-        for user in users:
+        for index, user in enumerate(users):
 
-            row = ctk.CTkFrame(self.body)
+            row_color = theme.CARD if index % 2 == 0 else theme.BACKGROUND
+
+            row = ctk.CTkFrame(
+                self.body,
+                fg_color=row_color,
+                corner_radius=12,
+                height=56
+            )
 
             row.pack(
                 fill="x",
@@ -120,27 +163,70 @@ class UsersPage(ctk.CTkFrame):
                 pady=3
             )
 
-            status = "Active" if user["is_active"] else "Inactive"
+            row.pack_propagate(False)
+
+            accent = theme.SUCCESS if user["is_active"] else theme.TEXT_LIGHT
+
+            ctk.CTkFrame(
+                row,
+                width=4,
+                fg_color=accent,
+                corner_radius=4
+            ).pack(
+                side="left",
+                fill="y",
+                padx=(8, 10),
+                pady=10
+            )
 
             values = [
-                user["username"],
-                user["full_name"],
-                user["role"],
-                status
+                (user["username"], 140),
+                (user["full_name"], 180),
+                (user["role"], 120)
             ]
 
-            for value in values:
+            for text, width in values:
 
                 ctk.CTkLabel(
                     row,
-                    text=value,
-                    width=140,
-                    anchor="w"
+                    text=text,
+                    width=width,
+                    anchor="w",
+                    font=theme.BODY_FONT,
+                    text_color=theme.TEXT
                 ).pack(
                     side="left",
-                    padx=5,
-                    pady=8
+                    padx=5
                 )
+
+            # ---- Status pill ----
+
+            status_text = "Active" if user["is_active"] else "Inactive"
+            status_color = theme.SUCCESS if user["is_active"] else theme.DANGER
+
+            status_pill = ctk.CTkFrame(
+                row,
+                fg_color=status_color,
+                corner_radius=10,
+                width=90,
+                height=28
+            )
+
+            status_pill.pack(
+                side="left",
+                padx=5
+            )
+
+            status_pill.pack_propagate(False)
+
+            ctk.CTkLabel(
+                status_pill,
+                text=status_text,
+                font=theme.SMALL_FONT,
+                text_color="white"
+            ).pack(expand=True)
+
+            # ---- Action button ----
 
             if user["is_active"]:
 
@@ -148,12 +234,15 @@ class UsersPage(ctk.CTkFrame):
                     row,
                     text="Disable",
                     width=90,
-                    fg_color="#d9534f",
-                    hover_color="#c9302c",
+                    height=32,
+                    corner_radius=8,
+                    fg_color=theme.DANGER,
+                    hover_color="#DC2626",
+                    font=theme.SMALL_FONT,
                     command=lambda uid=user["id"]: self.disable(uid)
                 ).pack(
-                    side="left",
-                    padx=5
+                    side="right",
+                    padx=10
                 )
 
             else:
@@ -162,10 +251,15 @@ class UsersPage(ctk.CTkFrame):
                     row,
                     text="Enable",
                     width=90,
+                    height=32,
+                    corner_radius=8,
+                    fg_color=theme.SUCCESS,
+                    hover_color="#16A34A",
+                    font=theme.SMALL_FONT,
                     command=lambda uid=user["id"]: self.enable(uid)
                 ).pack(
-                    side="left",
-                    padx=5
+                    side="right",
+                    padx=10
                 )
 
     # ==================================================

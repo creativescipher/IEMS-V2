@@ -21,13 +21,12 @@ class ExpenditurePage(ctk.CTkFrame):
 
     def build_ui(self):
 
-        title = ctk.CTkLabel(
+        ctk.CTkLabel(
             self,
             text="Expenditure Management",
-            font=theme.TITLE_FONT
-        )
-
-        title.pack(
+            font=theme.TITLE_FONT,
+            text_color=theme.TEXT
+        ).pack(
             anchor="w",
             padx=25,
             pady=(20, 10)
@@ -48,18 +47,34 @@ class ExpenditurePage(ctk.CTkFrame):
             toolbar,
             text="+ Add Expenditure",
             width=160,
+            height=38,
+            corner_radius=10,
+            fg_color=theme.PRIMARY,
+            hover_color=theme.PRIMARY_HOVER,
             command=self.add_expenditure
         ).pack(side="left")
 
         self.search_entry = ctk.CTkEntry(
             toolbar,
             width=250,
+            height=38,
+            corner_radius=10,
             placeholder_text="Search..."
         )
 
         self.search_entry.pack(side="right")
 
-        table = ctk.CTkFrame(self)
+        # ==================================================
+        # Table container
+        # ==================================================
+
+        table = ctk.CTkFrame(
+            self,
+            fg_color=theme.CARD,
+            corner_radius=18,
+            border_width=1,
+            border_color=theme.BORDER
+        )
 
         table.pack(
             fill="both",
@@ -69,46 +84,57 @@ class ExpenditurePage(ctk.CTkFrame):
         )
 
         headers = [
-            "ID",
-            "Category",
-            "Amount",
-            "Description",
-            "Date"
+            ("ID", 60),
+            ("Category", 160),
+            ("Amount", 140),
+            ("Description", 260),
+            ("Date", 140)
         ]
 
-        header_frame = ctk.CTkFrame(table)
+        header_frame = ctk.CTkFrame(
+            table,
+            fg_color="transparent"
+        )
 
-        header_frame.pack(fill="x")
+        header_frame.pack(
+            fill="x",
+            padx=15,
+            pady=(15, 5)
+        )
 
-        for text in headers:
+        for text, width in headers:
 
             ctk.CTkLabel(
                 header_frame,
                 text=text,
-                width=130,
+                width=width,
                 anchor="w",
-                font=("Segoe UI", 12, "bold")
+                font=theme.SMALL_FONT,
+                text_color=theme.TEXT_LIGHT
             ).pack(
                 side="left",
-                padx=5,
-                pady=10
+                padx=5
             )
 
         ctk.CTkLabel(
             header_frame,
             text="Action",
             width=90,
-            font=("Segoe UI", 12, "bold")
-        ).pack(
-            side="right",
-            padx=10
-        )
+            anchor="e",
+            font=theme.SMALL_FONT,
+            text_color=theme.TEXT_LIGHT
+        ).pack(side="right", padx=5)
 
-        self.body = ctk.CTkScrollableFrame(table)
+        self.body = ctk.CTkScrollableFrame(
+            table,
+            fg_color="transparent"
+        )
 
         self.body.pack(
             fill="both",
-            expand=True
+            expand=True,
+            padx=10,
+            pady=(0, 15)
         )
 
     # ==================================================
@@ -124,52 +150,74 @@ class ExpenditurePage(ctk.CTkFrame):
 
             ctk.CTkLabel(
                 self.body,
-                text="No expenditure records found."
-            ).pack(
-                pady=30
-            )
+                text="No expenditure records found.",
+                text_color=theme.TEXT_LIGHT
+            ).pack(pady=30)
 
             return
 
-        for row in rows:
+        for index, row in enumerate(rows):
 
-            record = ctk.CTkFrame(self.body)
+            row_color = theme.CARD if index % 2 == 0 else theme.BACKGROUND
+
+            record = ctk.CTkFrame(
+                self.body,
+                fg_color=row_color,
+                corner_radius=12,
+                height=52
+            )
 
             record.pack(
                 fill="x",
                 padx=5,
-                pady=2
+                pady=3
+            )
+
+            record.pack_propagate(False)
+
+            ctk.CTkFrame(
+                record,
+                width=4,
+                fg_color=theme.DANGER,
+                corner_radius=4
+            ).pack(
+                side="left",
+                fill="y",
+                padx=(8, 10),
+                pady=8
             )
 
             values = [
-
-                row["id"],
-                row["name"],
-                f"₦{row['amount']:,.2f}",
-                row["description"],
-                row["transaction_date"]
-
+                (str(row["id"]), 60),
+                (row["name"], 160),
+                (f"₦{row['amount']:,.2f}", 140),
+                (row["description"], 260),
+                (row["transaction_date"], 140)
             ]
 
-            for value in values:
+            for text, width in values:
 
                 ctk.CTkLabel(
                     record,
-                    text=value,
-                    width=130,
-                    anchor="w"
+                    text=text,
+                    width=width,
+                    anchor="w",
+                    font=theme.BODY_FONT,
+                    text_color=theme.TEXT
                 ).pack(
                     side="left",
-                    padx=5,
-                    pady=8
+                    padx=5
                 )
 
             ctk.CTkButton(
                 record,
                 text="Delete",
                 width=80,
-                fg_color="#d9534f",
-                hover_color="#c9302c",
+                height=32,
+                corner_radius=8,
+                fg_color=theme.DANGER,
+                hover_color="#DC2626",
+                font=theme.SMALL_FONT,
                 command=lambda expenditure_id=row["id"]: self.delete_expenditure(expenditure_id)
             ).pack(
                 side="right",
