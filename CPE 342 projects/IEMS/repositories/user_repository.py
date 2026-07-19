@@ -1,19 +1,10 @@
 from database.connection import get_connection
-from utils.logger import get_logger
-
-logger = get_logger(__name__)
 
 
 class UserRepository:
-    """
-    Handles all database operations related to users.
-    """
 
     @staticmethod
-    def get_by_username(username: str):
-        """
-        Return a user by username.
-        """
+    def get_by_username(username):
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -33,26 +24,110 @@ class UserRepository:
 
         return user
 
+    # ==================================================
+
     @staticmethod
-    def get_by_id(user_id: int):
-        """
-        Return a user by ID.
-        """
+    def username_exists(username):
 
         conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute(
             """
-            SELECT *
+            SELECT id
             FROM users
-            WHERE id = ?
+            WHERE username = ?
             """,
-            (user_id,)
+            (username,)
         )
 
-        user = cursor.fetchone()
+        exists = cursor.fetchone() is not None
 
         conn.close()
 
-        return user
+        return exists
+
+    # ==================================================
+
+    @staticmethod
+    def get_all():
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT
+                id,
+                username,
+                full_name,
+                role,
+                is_active,
+                created_at
+            FROM users
+            ORDER BY username
+        """)
+
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return rows
+
+    # ==================================================
+
+    @staticmethod
+    def add(
+        username,
+        password_hash,
+        full_name,
+        role
+    ):
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO users
+            (
+                username,
+                password_hash,
+                full_name,
+                role
+            )
+            VALUES
+            (?, ?, ?, ?)
+            """,
+            (
+                username,
+                password_hash,
+                full_name,
+                role
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+    # ==================================================
+
+    @staticmethod
+    def set_active(user_id, active):
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            UPDATE users
+            SET is_active = ?
+            WHERE id = ?
+            """,
+            (
+                active,
+                user_id
+            )
+        )
+
+        conn.commit()
+        conn.close()
