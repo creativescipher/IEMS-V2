@@ -23,11 +23,23 @@ class DashboardPage(ctk.CTkFrame):
         ctk.CTkLabel(
             self,
             text="Dashboard",
-            font=theme.TITLE_FONT
+            font=theme.TITLE_FONT,
+            text_color=theme.TEXT
         ).pack(
             anchor="w",
             padx=25,
-            pady=(20, 20)
+            pady=(20, 5)
+        )
+
+        ctk.CTkLabel(
+            self,
+            text="Business Overview",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT_LIGHT
+        ).pack(
+            anchor="w",
+            padx=25,
+            pady=(0, 20)
         )
 
         cards = ctk.CTkFrame(
@@ -36,10 +48,10 @@ class DashboardPage(ctk.CTkFrame):
         )
 
         cards.pack(
-            padx=20,
-            pady=10,
             fill="both",
-            expand=True
+            expand=True,
+            padx=20,
+            pady=10
         )
 
         cards.grid_columnconfigure((0, 1), weight=1)
@@ -47,8 +59,10 @@ class DashboardPage(ctk.CTkFrame):
 
         self.income_card = self.create_card(
             cards,
-            "Total Income"
+            "Total Income",
+            "#22C55E"
         )
+
         self.income_card.grid(
             row=0,
             column=0,
@@ -59,8 +73,10 @@ class DashboardPage(ctk.CTkFrame):
 
         self.expense_card = self.create_card(
             cards,
-            "Total Expenditure"
+            "Total Expenditure",
+            "#EF4444"
         )
+
         self.expense_card.grid(
             row=0,
             column=1,
@@ -71,8 +87,10 @@ class DashboardPage(ctk.CTkFrame):
 
         self.balance_card = self.create_card(
             cards,
-            "Net Balance"
+            "Net Balance",
+            "#5B5FEF"
         )
+
         self.balance_card.grid(
             row=1,
             column=0,
@@ -83,8 +101,10 @@ class DashboardPage(ctk.CTkFrame):
 
         self.records_card = self.create_card(
             cards,
-            "Records"
+            "Transactions",
+            "#F59E0B"
         )
+
         self.records_card.grid(
             row=1,
             column=1,
@@ -96,39 +116,74 @@ class DashboardPage(ctk.CTkFrame):
         ctk.CTkButton(
             self,
             text="Refresh Dashboard",
-            width=180,
+            width=200,
+            height=42,
+            corner_radius=10,
+            fg_color=theme.PRIMARY,
+            hover_color=theme.PRIMARY_HOVER,
             command=self.load_dashboard
         ).pack(
-            pady=20
+            pady=(10, 25)
         )
 
     # ==================================================
 
-    def create_card(self, master, title):
+    def create_card(self, master, title, color):
 
         card = ctk.CTkFrame(
             master,
-            corner_radius=12,
-            height=140
+            fg_color=theme.CARD,
+            corner_radius=18,
+            border_width=1,
+            border_color=theme.BORDER,
+            height=165
         )
 
         card.pack_propagate(False)
 
-        ctk.CTkLabel(
+        top = ctk.CTkFrame(
             card,
-            text=title,
-            font=("Segoe UI", 16, "bold")
-        ).pack(
+            fg_color="transparent"
+        )
+
+        top.pack(
+            fill="x",
+            padx=20,
             pady=(20, 10)
+        )
+
+        ctk.CTkFrame(
+            top,
+            width=10,
+            height=40,
+            fg_color=color,
+            corner_radius=10
+        ).pack(
+            side="left",
+            padx=(0, 10)
+        )
+
+        ctk.CTkLabel(
+            top,
+            text=title,
+            font=theme.CARD_TITLE_FONT,
+            text_color=theme.TEXT
+        ).pack(
+            side="left"
         )
 
         value = ctk.CTkLabel(
             card,
-            text="",
-            font=("Segoe UI", 22)
+            text="0",
+            font=theme.CARD_VALUE_FONT,
+            text_color=theme.TEXT
         )
 
-        value.pack()
+        value.pack(
+            anchor="w",
+            padx=25,
+            pady=(5, 10)
+        )
 
         card.value = value
 
@@ -153,8 +208,8 @@ class DashboardPage(ctk.CTkFrame):
         )
 
         self.records_card.value.configure(
-            text=(
-                f"Income: {data['income_count']}\n"
-                f"Expense: {data['expenditure_count']}"
+            text=str(
+                data["income_count"] +
+                data["expenditure_count"]
             )
         )
