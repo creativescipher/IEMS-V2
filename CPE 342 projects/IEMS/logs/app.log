@@ -213,3 +213,36 @@ sqlite3.OperationalError: no such table: schema_version
 2026-07-20 04:49:46,778 | INFO | database.seeders.categories | Default categories seeded.
 2026-07-20 04:49:46,811 | INFO | database.seeders.settings | System settings seeded.
 2026-07-20 04:49:55,138 | INFO | services.auth_service | admin logged in.
+2026-07-20 04:52:26,348 | INFO | database.schema | Database schema initialized successfully.
+2026-07-20 04:52:26,350 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-20 04:52:26,358 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-20 04:52:26,367 | INFO | database.seeders.settings | System settings seeded.
+2026-07-20 04:52:33,494 | INFO | services.auth_service | admin logged in.
+2026-07-20 04:53:00,225 | INFO | services.auth_service | admin logged out.
+2026-07-20 11:30:57,457 | INFO | database.schema | Database schema initialized successfully.
+2026-07-20 11:30:57,472 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-20 11:30:57,548 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-20 11:30:57,582 | INFO | database.seeders.settings | System settings seeded.
+2026-07-20 11:31:10,201 | INFO | services.auth_service | admin logged in.
+2026-07-20 11:38:00,578 | INFO | services.auth_service | admin logged out.
+2026-07-20 11:38:30,372 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:33,990 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:35,095 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:40,046 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:40,966 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:41,589 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:42,142 | WARNING | services.auth_service | Unknown username.
+2026-07-20 11:38:56,852 | WARNING | services.auth_service | Invalid password.
+2026-07-20 11:38:58,193 | WARNING | services.auth_service | Invalid password.
+2026-07-20 11:38:59,097 | INFO | services.auth_service | Shrommy logged in.
+2026-07-20 12:12:28,674 | INFO | database.schema | Database schema initialized successfully.
+2026-07-20 12:12:28,676 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-20 12:12:28,685 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-20 12:12:28,706 | INFO | database.seeders.settings | System settings seeded.
+2026-07-20 12:12:35,148 | WARNING | services.auth_service | Invalid password.
+2026-07-20 12:12:37,731 | INFO | services.auth_service | admin logged in.
+2026-07-20 12:20:51,482 | INFO | database.schema | Database schema initialized successfully.
+2026-07-20 12:20:51,484 | INFO | database.seeders.admin | Administrator already exists.
+2026-07-20 12:20:51,492 | INFO | database.seeders.categories | Default categories seeded.
+2026-07-20 12:20:51,501 | INFO | database.seeders.settings | System settings seeded.
+2026-07-20 12:20:57,772 | INFO | services.auth_service | admin logged in.

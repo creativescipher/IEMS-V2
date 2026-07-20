@@ -11,35 +11,45 @@ class ConfirmDialog(ctk.CTkToplevel):
 
         self.on_confirm = on_confirm
 
-        self.title(title)
-        self.geometry("360x220")
-        self.resizable(False, False)
+        self.overrideredirect(True)
+        self.attributes("-topmost", True)
+
         self.configure(fg_color=theme.BACKGROUND)
 
-        self.grab_set()
+        card = ctk.CTkFrame(
+            self,
+            fg_color=theme.CARD,
+            corner_radius=16,
+            border_width=1,
+            border_color=theme.BORDER,
+            width=340
+        )
+
+        card.pack(fill="both", expand=True)
+        card.pack_propagate(False)
 
         ctk.CTkLabel(
-            self,
+            card,
             text=title,
             font=theme.SUBTITLE_FONT,
             text_color=theme.TEXT
         ).pack(pady=(30, 10))
 
         ctk.CTkLabel(
-            self,
+            card,
             text=message,
             font=theme.BODY_FONT,
             text_color=theme.TEXT_LIGHT,
-            wraplength=300,
+            wraplength=280,
             justify="center"
         ).pack(pady=(0, 25), padx=20)
 
         buttons = ctk.CTkFrame(
-            self,
+            card,
             fg_color="transparent"
         )
 
-        buttons.pack(pady=10)
+        buttons.pack(pady=(0, 30))
 
         ctk.CTkButton(
             buttons,
@@ -67,6 +77,24 @@ class ConfirmDialog(ctk.CTkToplevel):
             font=theme.BODY_FONT,
             command=self.destroy
         ).pack(side="left", padx=8)
+
+        w = 340
+        h = 260
+
+        parent_root = parent.winfo_toplevel()
+        parent_root.update_idletasks()
+
+        px = parent_root.winfo_rootx()
+        py = parent_root.winfo_rooty()
+        pw = parent_root.winfo_width()
+        ph = parent_root.winfo_height()
+
+        x = px + (pw - w) // 2
+        y = py + (ph - h) // 2
+
+        self.geometry(f"{w}x{h}+{x}+{y}")
+
+        self.grab_set()
 
     # ==================================================
 

@@ -1,8 +1,9 @@
 import customtkinter as ctk
-from tkinter import messagebox
 
 from config import theme
 from services.income_service import IncomeService
+from views.dialogs.confirm_dialog import ConfirmDialog
+from views.widgets.toast import show_success
 
 
 class IncomePage(ctk.CTkFrame):
@@ -215,7 +216,7 @@ class IncomePage(ctk.CTkFrame):
             )
 
             values = [
-                (str(row["id"]), 60),
+                (str(index + 1), 60),
                 (row["name"], 160),
                 (f"₦{row['amount']:,.2f}", 140),
                 (row["description"], 260),
@@ -245,7 +246,7 @@ class IncomePage(ctk.CTkFrame):
                 fg_color=theme.DANGER,
                 hover_color="#DC2626",
                 font=theme.SMALL_FONT,
-                command=lambda income_id=row["id"]: self.delete_income(income_id)
+                command=lambda income_id=row["id"]: self.confirm_delete(income_id)
             ).pack(
                 side="right",
                 padx=10
@@ -264,18 +265,21 @@ class IncomePage(ctk.CTkFrame):
 
     # ==================================================
 
-    def delete_income(self, income_id):
-        if not messagebox.askyesno(
+    def confirm_delete(self, income_id):
+
+        ConfirmDialog(
+            self,
             "Delete Income",
-            "Are you sure you want to delete this income record?"
-        ):
-            return
+            "Are you sure you want to delete this income record?",
+            lambda: self.delete_income(income_id)
+        )
+
+    # ==================================================
+
+    def delete_income(self, income_id):
 
         IncomeService.delete(income_id)
 
-        messagebox.showinfo(
-            "Success",
-            "Income deleted successfully."
-        )
-
         self.load_data()
+
+        show_success(self, "Income deleted successfully.")

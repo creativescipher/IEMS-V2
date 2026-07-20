@@ -1,8 +1,9 @@
 import customtkinter as ctk
-from tkinter import messagebox
 
 from config import theme
 from services.expenditure_service import ExpenditureService
+from views.dialogs.confirm_dialog import ConfirmDialog
+from views.widgets.toast import show_success
 
 
 class ExpenditurePage(ctk.CTkFrame):
@@ -215,7 +216,7 @@ class ExpenditurePage(ctk.CTkFrame):
             )
 
             values = [
-                (str(row["id"]), 60),
+                (str(index + 1), 60),
                 (row["name"], 160),
                 (f"₦{row['amount']:,.2f}", 140),
                 (row["description"], 260),
@@ -245,7 +246,7 @@ class ExpenditurePage(ctk.CTkFrame):
                 fg_color=theme.DANGER,
                 hover_color="#DC2626",
                 font=theme.SMALL_FONT,
-                command=lambda expenditure_id=row["id"]: self.delete_expenditure(expenditure_id)
+                command=lambda expenditure_id=row["id"]: self.confirm_delete(expenditure_id)
             ).pack(
                 side="right",
                 padx=10
@@ -264,19 +265,21 @@ class ExpenditurePage(ctk.CTkFrame):
 
     # ==================================================
 
-    def delete_expenditure(self, expenditure_id):
+    def confirm_delete(self, expenditure_id):
 
-        if not messagebox.askyesno(
+        ConfirmDialog(
+            self,
             "Delete Expenditure",
-            "Are you sure you want to delete this expenditure record?"
-        ):
-            return
+            "Are you sure you want to delete this expenditure record?",
+            lambda: self.delete_expenditure(expenditure_id)
+        )
+
+    # ==================================================
+
+    def delete_expenditure(self, expenditure_id):
 
         ExpenditureService.delete(expenditure_id)
 
-        messagebox.showinfo(
-            "Success",
-            "Expenditure deleted successfully."
-        )
-
         self.load_data()
+
+        show_success(self, "Expenditure deleted successfully.")
