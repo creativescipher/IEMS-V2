@@ -182,6 +182,10 @@ class ExpenditureDialog(ctk.CTkToplevel):
                 self.amount.get()
             )
 
+            if amount <= 0:
+                show_error(self, "Amount must be greater than zero.")
+                return
+
         except ValueError:
 
             show_error(self, "Invalid amount.")

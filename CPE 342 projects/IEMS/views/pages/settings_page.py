@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from tkinter import messagebox
 
 from config import theme
 from views.widgets.toast import show_success
@@ -68,40 +67,6 @@ class SettingsPage(ctk.CTkFrame):
         self.company.insert(0, "Seven-Up Bottling Company")
 
         self.company.pack(
-            anchor="w",
-            padx=20,
-            pady=(0, 15)
-        )
-
-        # ---------------- Currency ----------------
-
-        ctk.CTkLabel(
-            card,
-            text="Currency",
-            font=theme.BODY_FONT,
-            text_color=theme.TEXT
-        ).pack(
-            anchor="w",
-            padx=20,
-            pady=(0, 5)
-        )
-
-        self.currency = ctk.CTkComboBox(
-            card,
-            values=[
-                "₦ Nigerian Naira",
-                "$ US Dollar",
-                "£ British Pound",
-                "€ Euro"
-            ],
-            width=250,
-            height=38,
-            corner_radius=10
-        )
-
-        self.currency.set("₦ Nigerian Naira")
-
-        self.currency.pack(
             anchor="w",
             padx=20,
             pady=(0, 15)
