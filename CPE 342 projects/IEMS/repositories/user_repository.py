@@ -131,3 +131,40 @@ class UserRepository:
 
         conn.commit()
         conn.close()
+        # ==================================================
+
+    @staticmethod
+    def get_by_id(user_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,)
+        )
+        user = cursor.fetchone()
+        conn.close()
+        return user
+
+    # ==================================================
+
+    @staticmethod
+    def update_password(user_id, password_hash):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """,
+            (
+                password_hash,
+                user_id
+            )
+        )
+        conn.commit()
+        conn.close()

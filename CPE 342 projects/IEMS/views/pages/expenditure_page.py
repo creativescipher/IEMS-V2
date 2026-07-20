@@ -14,6 +14,8 @@ class ExpenditurePage(ctk.CTkFrame):
             fg_color=theme.BACKGROUND
         )
 
+        self.all_rows = []
+
         self.build_ui()
         self.load_data()
 
@@ -63,6 +65,8 @@ class ExpenditurePage(ctk.CTkFrame):
         )
 
         self.search_entry.pack(side="right")
+
+        self.search_entry.bind("<KeyRelease>", lambda e: self.filter_data())
 
         # ==================================================
         # Table container
@@ -141,10 +145,33 @@ class ExpenditurePage(ctk.CTkFrame):
 
     def load_data(self):
 
+        self.all_rows = ExpenditureService.get_all()
+        self.render_rows(self.all_rows)
+
+    # ==================================================
+
+    def filter_data(self):
+
+        query = self.search_entry.get().strip().lower()
+
+        if not query:
+            self.render_rows(self.all_rows)
+            return
+
+        filtered = [
+            row for row in self.all_rows
+            if query in row["name"].lower()
+            or query in (row["description"] or "").lower()
+        ]
+
+        self.render_rows(filtered)
+
+    # ==================================================
+
+    def render_rows(self, rows):
+
         for widget in self.body.winfo_children():
             widget.destroy()
-
-        rows = ExpenditureService.get_all()
 
         if not rows:
 

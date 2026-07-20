@@ -4,6 +4,8 @@ from tkinter import messagebox
 from config import theme
 from services.session import Session
 from services.user_service import UserService
+from views.dialogs.confirm_dialog import ConfirmDialog
+from views.widgets.toast import show_success, show_error
 
 
 class UsersPage(ctk.CTkFrame):
@@ -226,6 +228,26 @@ class UsersPage(ctk.CTkFrame):
                 text_color="white"
             ).pack(expand=True)
 
+            # ---- Reset Password button ----
+
+            ctk.CTkButton(
+                row,
+                text="Reset Password",
+                width=130,
+                height=32,
+                corner_radius=8,
+                fg_color="transparent",
+                hover_color=theme.BORDER,
+                border_width=1,
+                border_color=theme.BORDER,
+                text_color=theme.TEXT,
+                font=theme.SMALL_FONT,
+                command=lambda uid=user["id"], uname=user["username"]: self.open_reset_password(uid, uname)
+            ).pack(
+                side="right",
+                padx=(0, 10)
+            )
+
             # ---- Action button ----
 
             if user["is_active"]:
@@ -239,7 +261,7 @@ class UsersPage(ctk.CTkFrame):
                     fg_color=theme.DANGER,
                     hover_color="#DC2626",
                     font=theme.SMALL_FONT,
-                    command=lambda uid=user["id"]: self.disable(uid)
+                    command=lambda uid=user["id"]: self.confirm_disable(uid)
                 ).pack(
                     side="right",
                     padx=10
@@ -270,30 +292,48 @@ class UsersPage(ctk.CTkFrame):
 
         self.load_data()
 
+        show_success(self, "User enabled.")
+
     # ==================================================
 
-    def disable(self, user_id):
+    def confirm_disable(self, user_id):
 
         current_user = Session.get_user()
 
         if current_user and current_user["id"] == user_id:
 
-            messagebox.showwarning(
-                "Not Allowed",
-                "You cannot disable your own account."
-            )
-
+            show_error(self, "You cannot disable your own account.")
             return
 
-        if not messagebox.askyesno(
-            "Confirm",
-            "Disable this user?"
-        ):
-            return
+        ConfirmDialog(
+            self,
+            "Disable User",
+            "Are you sure you want to disable this user?",
+            lambda: self.disable(user_id)
+        )
+
+    # ==================================================
+
+    def disable(self, user_id):
 
         UserService.deactivate(user_id)
 
         self.load_data()
+
+        show_success(self, "User disabled.")
+
+    # ==================================================
+
+    def open_reset_password(self, user_id, username):
+
+        from views.dialogs.reset_password_dialog import ResetPasswordDialog
+
+        ResetPasswordDialog(
+            self,
+            user_id,
+            username,
+            self.load_data
+        )
 
     # ==================================================
 

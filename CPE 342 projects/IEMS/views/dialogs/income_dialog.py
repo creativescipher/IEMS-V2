@@ -6,6 +6,7 @@ from config import theme
 from database.connection import get_connection
 from services.income_service import IncomeService
 from services.session import Session
+from views.widgets.toast import show_success, show_error
 
 
 class IncomeDialog(ctk.CTkToplevel):
@@ -173,10 +174,7 @@ class IncomeDialog(ctk.CTkToplevel):
 
         if not self.category.get():
 
-            messagebox.showerror(
-                "Error",
-                "Select a category."
-            )
+            show_error(self, "Select a category.")
             return
 
         try:
@@ -187,11 +185,7 @@ class IncomeDialog(ctk.CTkToplevel):
 
         except ValueError:
 
-            messagebox.showerror(
-                "Error",
-                "Invalid amount."
-            )
-
+            show_error(self, "Invalid amount.")
             return
 
         conn = get_connection()
@@ -227,11 +221,8 @@ class IncomeDialog(ctk.CTkToplevel):
 
         )
 
-        messagebox.showinfo(
-            "Success",
-            "Income added successfully."
-        )
-
         self.refresh_callback()
 
         self.destroy()
+
+        show_success(self.master, "Income added successfully.")

@@ -6,6 +6,7 @@ from config import theme
 from database.connection import get_connection
 from services.expenditure_service import ExpenditureService
 from services.session import Session
+from views.widgets.toast import show_success, show_error
 
 
 class ExpenditureDialog(ctk.CTkToplevel):
@@ -172,10 +173,7 @@ class ExpenditureDialog(ctk.CTkToplevel):
 
         if not self.category.get():
 
-            messagebox.showerror(
-                "Error",
-                "Select a category."
-            )
+            show_error(self, "Select a category.")
             return
 
         try:
@@ -186,11 +184,7 @@ class ExpenditureDialog(ctk.CTkToplevel):
 
         except ValueError:
 
-            messagebox.showerror(
-                "Error",
-                "Invalid amount."
-            )
-
+            show_error(self, "Invalid amount.")
             return
 
         conn = get_connection()
@@ -225,11 +219,8 @@ class ExpenditureDialog(ctk.CTkToplevel):
 
         )
 
-        messagebox.showinfo(
-            "Success",
-            "Expenditure added successfully."
-        )
-
         self.refresh_callback()
 
         self.destroy()
+
+        show_success(self.master, "Expenditure added successfully.")

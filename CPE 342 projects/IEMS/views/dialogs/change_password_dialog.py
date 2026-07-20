@@ -2,20 +2,19 @@ import customtkinter as ctk
 from tkinter import messagebox
 
 from config import theme
+from services.session import Session
 from services.user_service import UserService
 from views.widgets.toast import show_success, show_error
 
 
-class UserDialog(ctk.CTkToplevel):
+class ChangePasswordDialog(ctk.CTkToplevel):
 
-    def __init__(self, parent, refresh_callback):
+    def __init__(self, parent):
 
         super().__init__(parent)
 
-        self.refresh_callback = refresh_callback
-
-        self.title("Add User")
-        self.geometry("400x520")
+        self.title("Change Password")
+        self.geometry("380x420")
         self.resizable(False, False)
         self.configure(fg_color=theme.BACKGROUND)
 
@@ -23,57 +22,21 @@ class UserDialog(ctk.CTkToplevel):
 
         ctk.CTkLabel(
             self,
-            text="Add New User",
+            text="Change Password",
             font=theme.SUBTITLE_FONT,
             text_color=theme.TEXT
         ).pack(pady=(25, 20))
 
-        # ---------------- Username ----------------
+        # ---------------- Current Password ----------------
 
         ctk.CTkLabel(
             self,
-            text="Username",
+            text="Current Password",
             font=theme.BODY_FONT,
             text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
-        self.username = ctk.CTkEntry(
-            self,
-            width=300,
-            height=38,
-            corner_radius=10
-        )
-
-        self.username.pack(pady=(4, 12))
-
-        # ---------------- Full Name ----------------
-
-        ctk.CTkLabel(
-            self,
-            text="Full Name",
-            font=theme.BODY_FONT,
-            text_color=theme.TEXT
-        ).pack(anchor="w", padx=30)
-
-        self.full_name = ctk.CTkEntry(
-            self,
-            width=300,
-            height=38,
-            corner_radius=10
-        )
-
-        self.full_name.pack(pady=(4, 12))
-
-        # ---------------- Password ----------------
-
-        ctk.CTkLabel(
-            self,
-            text="Password",
-            font=theme.BODY_FONT,
-            text_color=theme.TEXT
-        ).pack(anchor="w", padx=30)
-
-        self.password = ctk.CTkEntry(
+        self.current_password = ctk.CTkEntry(
             self,
             width=300,
             height=38,
@@ -81,32 +44,45 @@ class UserDialog(ctk.CTkToplevel):
             show="*"
         )
 
-        self.password.pack(pady=(4, 12))
+        self.current_password.pack(pady=(4, 12))
 
-        # ---------------- Role ----------------
+        # ---------------- New Password ----------------
 
         ctk.CTkLabel(
             self,
-            text="Role",
+            text="New Password",
             font=theme.BODY_FONT,
             text_color=theme.TEXT
         ).pack(anchor="w", padx=30)
 
-        self.role = ctk.CTkComboBox(
+        self.new_password = ctk.CTkEntry(
             self,
             width=300,
             height=38,
             corner_radius=10,
-            values=[
-                "Admin",
-                "Accountant",
-                "Manager"
-            ]
+            show="*"
         )
 
-        self.role.set("Accountant")
+        self.new_password.pack(pady=(4, 12))
 
-        self.role.pack(pady=(4, 12))
+        # ---------------- Confirm Password ----------------
+
+        ctk.CTkLabel(
+            self,
+            text="Confirm New Password",
+            font=theme.BODY_FONT,
+            text_color=theme.TEXT
+        ).pack(anchor="w", padx=30)
+
+        self.confirm_password = ctk.CTkEntry(
+            self,
+            width=300,
+            height=38,
+            corner_radius=10,
+            show="*"
+        )
+
+        self.confirm_password.pack(pady=(4, 12))
 
         # ---------------- Buttons ----------------
 
@@ -115,7 +91,7 @@ class UserDialog(ctk.CTkToplevel):
             fg_color="transparent"
         )
 
-        buttons.pack(pady=(20, 25))
+        buttons.pack(pady=(15, 25))
 
         ctk.CTkButton(
             buttons,
@@ -127,10 +103,7 @@ class UserDialog(ctk.CTkToplevel):
             hover_color=theme.PRIMARY_HOVER,
             font=theme.BODY_FONT,
             command=self.save
-        ).pack(
-            side="left",
-            padx=8
-        )
+        ).pack(side="left", padx=8)
 
         ctk.CTkButton(
             buttons,
@@ -145,40 +118,44 @@ class UserDialog(ctk.CTkToplevel):
             text_color=theme.TEXT,
             font=theme.BODY_FONT,
             command=self.destroy
-        ).pack(
-            side="left",
-            padx=8
-        )
+        ).pack(side="left", padx=8)
 
     # ==================================================
 
     def save(self):
 
-        username = self.username.get().strip()
-        full_name = self.full_name.get().strip()
-        password = self.password.get()
-        role = self.role.get()
+        current_password = self.current_password.get()
+        new_password = self.new_password.get()
+        confirm_password = self.confirm_password.get()
 
-        if not username or not full_name or not password:
-
+        if not current_password or not new_password or not confirm_password:
             show_error(self, "All fields are required.")
             return
 
+        if len(new_password) < 6:
+            show_error(self, "New password must be at least 6 characters.")
+            return
+
+        if new_password != confirm_password:
+            show_error(self, "New passwords do not match.")
+            return
+
+        user = Session.get_user()
+
         try:
 
-            UserService.add(
-                username,
-                password,
-                full_name,
-                role
+            UserService.change_password(
+                user["id"],
+                current_password,
+                new_password
             )
 
-            self.refresh_callback()
+            parent = self.master
 
             self.destroy()
 
-            show_success(self.master, "User added successfully.")
+            show_success(parent, "Password changed successfully.")
 
-        except Exception as e:
+        except ValueError as e:
 
             show_error(self, str(e))

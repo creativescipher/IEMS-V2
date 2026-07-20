@@ -1,7 +1,13 @@
+import csv
+
 import customtkinter as ctk
 
 from config import theme
+from config.settings import EXPORTS_DIR
 from services.report_service import ReportService
+from services.income_service import IncomeService
+from services.expenditure_service import ExpenditureService
+from views.widgets.toast import show_success, show_error
 
 
 class ReportsPage(ctk.CTkFrame):
@@ -178,26 +184,62 @@ class ReportsPage(ctk.CTkFrame):
 
     def export_income(self):
 
-        with open(
-            "exports/income_report.csv",
-            "w",
-            encoding="utf-8"
-        ) as file:
+        try:
 
-            file.write(
-                "Income export generated successfully."
-            )
+            rows = IncomeService.get_all()
+
+            filepath = EXPORTS_DIR / "income_report.csv"
+
+            with open(filepath, "w", newline="", encoding="utf-8") as file:
+
+                writer = csv.writer(file)
+
+                writer.writerow(["ID", "Category", "Amount", "Description", "Date"])
+
+                for row in rows:
+
+                    writer.writerow([
+                        row["id"],
+                        row["name"],
+                        row["amount"],
+                        row["description"],
+                        row["transaction_date"]
+                    ])
+
+            show_success(self, f"Saved to {filepath.name}", title="Exported!")
+
+        except Exception as e:
+
+            show_error(self, str(e))
 
     # ==============================================
 
     def export_expenditure(self):
 
-        with open(
-            "exports/expenditure_report.csv",
-            "w",
-            encoding="utf-8"
-        ) as file:
+        try:
 
-            file.write(
-                "Expenditure export generated successfully."
-            )
+            rows = ExpenditureService.get_all()
+
+            filepath = EXPORTS_DIR / "expenditure_report.csv"
+
+            with open(filepath, "w", newline="", encoding="utf-8") as file:
+
+                writer = csv.writer(file)
+
+                writer.writerow(["ID", "Category", "Amount", "Description", "Date"])
+
+                for row in rows:
+
+                    writer.writerow([
+                        row["id"],
+                        row["name"],
+                        row["amount"],
+                        row["description"],
+                        row["transaction_date"]
+                    ])
+
+            show_success(self, f"Saved to {filepath.name}", title="Exported!")
+
+        except Exception as e:
+
+            show_error(self, str(e))

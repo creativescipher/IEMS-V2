@@ -19,7 +19,7 @@ class IncomeRepository:
             FROM income
             JOIN categories
                 ON income.category_id = categories.id
-            ORDER BY income.transaction_date DESC
+            ORDER BY income.id ASC
         """)
 
         rows = cursor.fetchall()

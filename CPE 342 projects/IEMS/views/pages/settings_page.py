@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 
 from config import theme
+from views.widgets.toast import show_success
 
 
 class SettingsPage(ctk.CTkFrame):
@@ -158,7 +159,4 @@ class SettingsPage(ctk.CTkFrame):
 
         theme.set_mode(self.mode.get())
 
-        messagebox.showinfo(
-            "Success",
-            "Settings saved successfully."
-        )
+        show_success(self, "Settings saved successfully.")

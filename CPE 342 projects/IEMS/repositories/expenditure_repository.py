@@ -19,7 +19,7 @@ class ExpenditureRepository:
             FROM expenditure
             JOIN categories
                 ON expenditure.category_id = categories.id
-            ORDER BY expenditure.transaction_date DESC
+            ORDER BY expenditure.id ASC
         """)
 
         rows = cursor.fetchall()

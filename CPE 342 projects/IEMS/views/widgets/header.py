@@ -48,7 +48,7 @@ class Header(ctk.CTkFrame):
             padx=25
         )
 
-        # ---- Theme toggle button (new) ----
+        # ---- Theme toggle button ----
         self.mode_button = ctk.CTkButton(
             right,
             text="🌙" if theme.current_mode() == "Light" else "☀",
@@ -62,6 +62,7 @@ class Header(ctk.CTkFrame):
         )
         self.mode_button.pack(side="left", padx=(0, 15))
 
+        # ---- User card (now clickable — opens Change Password) ----
         user_card = ctk.CTkFrame(
             right,
             corner_radius=12,
@@ -71,24 +72,33 @@ class Header(ctk.CTkFrame):
             side="left",
             padx=(0, 15)
         )
-        ctk.CTkLabel(
+
+        name_label = ctk.CTkLabel(
             user_card,
             text=Session.full_name(),
             font=("Segoe UI Semibold", 13),
             text_color=theme.TEXT
-        ).pack(
+        )
+        name_label.pack(
             padx=15,
             pady=(8, 0)
         )
-        ctk.CTkLabel(
+
+        role_label = ctk.CTkLabel(
             user_card,
             text=Session.role(),
             font=("Segoe UI", 11),
             text_color=theme.TEXT_LIGHT
-        ).pack(
+        )
+        role_label.pack(
             padx=15,
             pady=(0, 8)
         )
+
+        for widget in (user_card, name_label, role_label):
+            widget.bind("<Button-1>", lambda e: self.open_change_password())
+            widget.configure(cursor="hand2")
+
         ctk.CTkButton(
             right,
             text="Logout",
@@ -108,3 +118,11 @@ class Header(ctk.CTkFrame):
         self.mode_button.configure(
             text="🌙" if new_mode == "Light" else "☀"
         )
+
+    # ==================================================
+
+    def open_change_password(self):
+
+        from views.dialogs.change_password_dialog import ChangePasswordDialog
+
+        ChangePasswordDialog(self.winfo_toplevel())
